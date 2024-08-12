@@ -11,7 +11,7 @@ A Jetpack Compose-based Android application that tracks the top cryptocurrencies
 
 ## Screenshots 📸
 
-*Add screenshots or a GIF showcasing the app in action.*
+![screenshot](screenshot.png)
 
 ## Technologies Used 🛠
 
