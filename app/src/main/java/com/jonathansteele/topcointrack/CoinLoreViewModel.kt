@@ -15,6 +15,7 @@ import kotlinx.serialization.json.Json
 class CoinLoreViewModel : ViewModel() {
     private var _allCoins: List<Coin> by mutableStateOf(emptyList())
     var sortedCoins: List<Coin> by mutableStateOf(emptyList())
+    var isLoading: Boolean by mutableStateOf(false) // Loading state
 
     init {
         fetchTickers()
@@ -22,14 +23,17 @@ class CoinLoreViewModel : ViewModel() {
 
     private fun fetchTickers() {
         viewModelScope.launch {
+            isLoading = true // Start loading
             val json = Json { ignoreUnknownKeys = true }
             val response = Fuel.get("https://api.coinlore.net/api/tickers/")
                 .toJson(json = json, deserializationStrategy = CoinLoreResponse.serializer())
             response.fold({
                 _allCoins = it?.data ?: emptyList()
                 sortedCoins = _allCoins
+                isLoading = false // Stop loading
             }, {
                 Log.e("CoinLoreViewModel", "An unexpected error occurred.", it)
+                isLoading = false // Stop loading
             })
         }
     }
