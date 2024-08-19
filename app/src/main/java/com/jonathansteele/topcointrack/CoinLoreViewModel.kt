@@ -1,21 +1,18 @@
 package com.jonathansteele.topcointrack
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import fuel.Fuel
-import fuel.get
-import fuel.serialization.toJson
 import kotlinx.coroutines.launch
-import kotlinx.serialization.json.Json
 
 class CoinLoreViewModel : ViewModel() {
+    private val repository = CoinLoreRepository() // Instantiate repository
     private var _allCoins: List<Coin> by mutableStateOf(emptyList())
     var sortedCoins: List<Coin> by mutableStateOf(emptyList())
-    var isLoading: Boolean by mutableStateOf(false) // Loading state
+    var isLoading: Boolean by mutableStateOf(false) // Loading state for initial fetch
+    var isRefreshing: Boolean by mutableStateOf(false) // Loading state for pull-to-refresh
 
     init {
         fetchTickers()
@@ -23,18 +20,21 @@ class CoinLoreViewModel : ViewModel() {
 
     private fun fetchTickers() {
         viewModelScope.launch {
-            isLoading = true // Start loading
-            val json = Json { ignoreUnknownKeys = true }
-            val response = Fuel.get("https://api.coinlore.net/api/tickers/")
-                .toJson(json = json, deserializationStrategy = CoinLoreResponse.serializer())
-            response.fold({
-                _allCoins = it?.data ?: emptyList()
-                sortedCoins = _allCoins
-                isLoading = false // Stop loading
-            }, {
-                Log.e("CoinLoreViewModel", "An unexpected error occurred.", it)
-                isLoading = false // Stop loading
-            })
+            isLoading = true
+            val coins = repository.fetchTickers()
+            _allCoins = coins
+            sortedCoins = coins
+            isLoading = false
+        }
+    }
+
+    fun fetchTickersForRefresh() {
+        viewModelScope.launch {
+            isRefreshing = true
+            val coins = repository.fetchTickers()
+            _allCoins = coins
+            sortedCoins = coins
+            isRefreshing = false
         }
     }
 

@@ -1,11 +1,13 @@
 # Top Cryptocurrencies Tracker 📈
 
-A Jetpack Compose-based Android application that tracks the top cryptocurrencies in real-time. The app displays key information such as price, 24h change, and allows sorting by different criteria like price and percentage change.
+TopCoinTrack is an Android application that provides real-time information about top cryptocurrencies. It features sorting capabilities and the ability to pull to refresh data. This project demonstrates the separation of concerns by employing the repository pattern, enhancing maintainability and testability.
 
 ## Features 🚀
 
 - **Live Cryptocurrency Data**: Fetches real-time data from the CoinLore API.
 - **Sorting**: Sort coins by price or 24h change.
+- **Pull-to-Refresh**: Update the list of cryptocurrencies with a pull-to-refresh gesture.
+- **Loading Indicators**: Show loading indicators during data fetching operations.
 - **Material Design 3**: Uses Jetpack Compose with Material 3 for a modern and responsive UI.
 - **Clean Architecture**: Follows best practices for MVVM architecture.
 

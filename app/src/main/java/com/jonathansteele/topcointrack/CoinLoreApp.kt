@@ -24,6 +24,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -42,8 +44,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 fun CoinLoreApp(viewModel: CoinLoreViewModel = viewModel()) {
     val sortedCoins = viewModel.sortedCoins
     val isLoading = viewModel.isLoading
+    val isRefreshing = viewModel.isRefreshing
     var sortCriteria by remember { mutableStateOf(SortCriteria.DEFAULT) }
     var expanded by remember { mutableStateOf(false) }
+    val state = rememberPullToRefreshState()
+    val onRefresh: () -> Unit = { viewModel.fetchTickersForRefresh() }
 
     // Apply sorting
     LaunchedEffect(sortCriteria) {
@@ -99,8 +104,13 @@ fun CoinLoreApp(viewModel: CoinLoreViewModel = viewModel()) {
                 CircularProgressIndicator()
             }
         } else {
-            // Show the list of coins once data is loaded
-            Column(modifier = Modifier.padding(it)) {
+            // Show the list of coins once data is loaded including pull down to refresh
+            PullToRefreshBox(
+                modifier = Modifier.padding(it),
+                state = state,
+                isRefreshing = isRefreshing,
+                onRefresh = onRefresh,
+            ) {
                 CoinList(coins = sortedCoins)
             }
         }
@@ -109,7 +119,7 @@ fun CoinLoreApp(viewModel: CoinLoreViewModel = viewModel()) {
 
 @Composable
 fun CoinList(coins: List<Coin>) {
-    LazyColumn {
+    LazyColumn(Modifier.fillMaxSize()) {
         items(coins) {
             CoinItem(it)
         }
