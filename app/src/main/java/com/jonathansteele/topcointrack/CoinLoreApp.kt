@@ -118,7 +118,7 @@ fun CoinLoreApp(viewModel: CoinLoreViewModel = viewModel()) {
 }
 
 @Composable
-fun CoinList(coins: List<Coin>) {
+fun CoinList(coins: List<CoinEntity>) {
     LazyColumn(Modifier.fillMaxSize()) {
         items(coins) {
             CoinItem(it)
@@ -127,7 +127,7 @@ fun CoinList(coins: List<Coin>) {
 }
 
 @Composable
-fun CoinItem(coin: Coin) {
+fun CoinItem(coin: CoinEntity) {
     ElevatedCard(
         modifier = Modifier
             .fillMaxWidth()

@@ -1,48 +1,53 @@
 package com.jonathansteele.topcointrack
 
+import android.app.Application
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 
-class CoinLoreViewModel : ViewModel() {
-    private val repository = CoinLoreRepository() // Instantiate repository
-    private var _allCoins: List<Coin> by mutableStateOf(emptyList())
-    var sortedCoins: List<Coin> by mutableStateOf(emptyList())
+class CoinLoreViewModel(application: Application) : AndroidViewModel(application) {
+
+    private val repository: CoinLoreRepository = CoinLoreRepository(
+        AppDatabase.getDatabase(application).coinDao()
+    )
+    var sortedCoins by mutableStateOf(emptyList<CoinEntity>())
     var isLoading: Boolean by mutableStateOf(false) // Loading state for initial fetch
     var isRefreshing: Boolean by mutableStateOf(false) // Loading state for pull-to-refresh
 
     init {
-        fetchTickers()
+        fetchCoins()
     }
 
-    private fun fetchTickers() {
+    private fun fetchCoins() {
         viewModelScope.launch {
             isLoading = true
-            val coins = repository.fetchTickers()
-            _allCoins = coins
-            sortedCoins = coins
-            isLoading = false
+            try {
+                sortedCoins = repository.getCoins(getApplication())
+            } finally {
+                isLoading = false
+            }
         }
     }
 
     fun fetchTickersForRefresh() {
         viewModelScope.launch {
             isRefreshing = true
-            val coins = repository.fetchTickers()
-            _allCoins = coins
-            sortedCoins = coins
-            isRefreshing = false
+            try {
+                sortedCoins = repository.getCoins(getApplication())
+            } finally {
+                isRefreshing = false
+            }
         }
     }
 
     fun sortCoins(by: SortCriteria) {
         sortedCoins = when (by) {
-            SortCriteria.DEFAULT -> _allCoins
-            SortCriteria.PRICE -> _allCoins.sortedByDescending { it.priceUsd.toFloat() }
-            SortCriteria.CHANGE -> _allCoins.sortedByDescending { it.percentChange24h.toFloat() }
+            SortCriteria.DEFAULT -> sortedCoins
+            SortCriteria.PRICE -> sortedCoins.sortedByDescending { it.priceUsd.toFloat() }
+            SortCriteria.CHANGE -> sortedCoins.sortedByDescending { it.percentChange24h.toFloat() }
         }
     }
 }
