@@ -60,7 +60,7 @@ dependencies {
     implementation(libs.fuel.kotlinx.serialization)
 
     implementation("androidx.room:room-runtime:2.7.1")
-    ksp("androidx.room:room-compiler:2.7.0")
+    ksp("androidx.room:room-compiler:2.7.1")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
