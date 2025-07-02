@@ -8,11 +8,13 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 
-class CoinLoreViewModel(application: Application) : AndroidViewModel(application) {
-
-    private val repository: CoinLoreRepository = CoinLoreRepository(
-        AppDatabase.getDatabase(application).coinDao()
-    )
+class CoinLoreViewModel(
+    application: Application,
+) : AndroidViewModel(application) {
+    private val repository: CoinLoreRepository =
+        CoinLoreRepository(
+            AppDatabase.getDatabase(application).coinDao(),
+        )
     var sortedCoins by mutableStateOf(emptyList<CoinEntity>())
     var isLoading: Boolean by mutableStateOf(false) // Loading state for initial fetch
     var isRefreshing: Boolean by mutableStateOf(false) // Loading state for pull-to-refresh
@@ -44,14 +46,17 @@ class CoinLoreViewModel(application: Application) : AndroidViewModel(application
     }
 
     fun sortCoins(by: SortCriteria) {
-        sortedCoins = when (by) {
-            SortCriteria.DEFAULT -> sortedCoins
-            SortCriteria.PRICE -> sortedCoins.sortedByDescending { it.priceUsd.toFloat() }
-            SortCriteria.CHANGE -> sortedCoins.sortedByDescending { it.percentChange24h.toFloat() }
-        }
+        sortedCoins =
+            when (by) {
+                SortCriteria.DEFAULT -> sortedCoins
+                SortCriteria.PRICE -> sortedCoins.sortedByDescending { it.priceUsd.toFloat() }
+                SortCriteria.CHANGE -> sortedCoins.sortedByDescending { it.percentChange24h.toFloat() }
+            }
     }
 }
 
 enum class SortCriteria {
-    DEFAULT, PRICE, CHANGE
+    DEFAULT,
+    PRICE,
+    CHANGE,
 }

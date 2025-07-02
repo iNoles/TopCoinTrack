@@ -8,7 +8,6 @@ import org.junit.Test
 import kotlin.system.measureTimeMillis
 
 class LoadTimeTest {
-
     @get:Rule
     val composeTestRule = createComposeRule()
 
@@ -20,10 +19,12 @@ class LoadTimeTest {
         }
 
         // Measure time taken for composable to be displayed
-        val loadTime = measureTimeMillis {
-            composeTestRule.onNodeWithTag("CoinLoreAppTag")
-                .assertIsDisplayed()
-        }
+        val loadTime =
+            measureTimeMillis {
+                composeTestRule
+                    .onNodeWithTag("CoinLoreAppTag")
+                    .assertIsDisplayed()
+            }
 
         println("Composable load time: $loadTime ms")
     }

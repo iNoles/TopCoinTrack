@@ -4,7 +4,9 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class CoinLoreResponse(val data: List<Coin>)
+data class CoinLoreResponse(
+    val data: List<Coin>,
+)
 
 @Serializable
 data class Coin(

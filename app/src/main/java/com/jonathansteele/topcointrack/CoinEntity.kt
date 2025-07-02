@@ -9,5 +9,5 @@ data class CoinEntity(
     val name: String,
     val symbol: String,
     val priceUsd: String,
-    val percentChange24h: String
+    val percentChange24h: String,
 )

@@ -6,3 +6,4 @@ plugins {
     alias(libs.plugins.compose.compiler) apply false
     id("com.google.devtools.ksp") version "2.2.0-2.0.2" apply false
 }
+

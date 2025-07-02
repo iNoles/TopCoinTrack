@@ -63,40 +63,44 @@ fun CoinLoreApp(viewModel: CoinLoreViewModel = viewModel()) {
                 actions = {
                     ExposedDropdownMenuBox(
                         expanded = expanded,
-                        onExpandedChange = { expanded = !expanded }
+                        onExpandedChange = { expanded = !expanded },
                     ) {
                         IconButton(onClick = { expanded = !expanded }) {
                             Icon(
                                 imageVector = Icons.Filled.ArrowDropDown,
-                                contentDescription = "Sort"
+                                contentDescription = "Sort",
                             )
                         }
                         ExposedDropdownMenu(
                             expanded = expanded,
-                            onDismissRequest = { expanded = false }
+                            onDismissRequest = { expanded = false },
                         ) {
                             DropdownMenuItem(
                                 text = { Text("Default") },
                                 onClick = {
                                     sortCriteria = SortCriteria.DEFAULT
                                     expanded = false
-                                })
+                                },
+                            )
                             DropdownMenuItem(
                                 text = { Text("Price") },
                                 onClick = {
                                     sortCriteria = SortCriteria.PRICE
                                     expanded = false
-                                })
+                                },
+                            )
                             DropdownMenuItem(
                                 text = { Text("24h Change") },
                                 onClick = {
                                     sortCriteria = SortCriteria.CHANGE
                                     expanded = false
-                                })
+                                },
+                            )
                         }
                     }
-                })
-        }
+                },
+            )
+        },
     ) {
         if (isLoading) {
             // Show loading indicator
@@ -129,47 +133,50 @@ fun CoinList(coins: List<CoinEntity>) {
 @Composable
 fun CoinItem(coin: CoinEntity) {
     ElevatedCard(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp, horizontal = 16.dp)
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp, horizontal = 16.dp),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Text(
                     text = "${coin.name} (${coin.symbol})",
                     style = MaterialTheme.typography.bodyLarge,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
                 Text(
                     text = "$${coin.priceUsd}",
                     style = MaterialTheme.typography.bodyLarge,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
                 )
             }
             Spacer(modifier = Modifier.height(8.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Text(
                     text = "24h Change:",
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialTheme.typography.bodyMedium,
                 )
-                val changeColor = if (coin.percentChange24h.toFloat() >= 0) {
-                    MaterialTheme.colorScheme.primary
-                } else {
-                    MaterialTheme.colorScheme.error
-                }
+                val changeColor =
+                    if (coin.percentChange24h.toFloat() >= 0) {
+                        MaterialTheme.colorScheme.primary
+                    } else {
+                        MaterialTheme.colorScheme.error
+                    }
                 Text(
                     text = "${coin.percentChange24h}%",
-                    style = MaterialTheme.typography.bodyMedium.copy(color = changeColor)
+                    style = MaterialTheme.typography.bodyMedium.copy(color = changeColor),
                 )
             }
 
